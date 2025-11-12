@@ -1,45 +1,56 @@
 import Layout from '../../components/layout';
-// FIX: Adjusted import path to ensure Next.js can find the lib directory
-import { getAllPostIds, getPostData } from '../../lib/posts'; 
+// FIX: Changed the import name from getPostData to getData to match the export in lib/posts.js
+import { getAllPostIds, getData } from '../../lib/posts'; 
 import Head from 'next/head';
-import Date from '../../components/date'; // Added missing Date component import from previous version
-import utilStyles from '../../styles/utils.module.css'; // Added missing utility styles import
+import Date from '../../components/date'; 
+import utilStyles from '../../styles/utils.module.css'; 
 
-// This function fetches the data for each posts at build time
-// receives `params` containing the post's ID.
+// This function fetches data for each individual post at build time.
+// It receives `params` containing the post's ID.
 export async function getStaticProps({ params }) {
- // Fetch the post data based on the ID from the URL.
- const postData = await getPostData(params.id);
+ // FIX: Call the correctly imported function: getData
+ const postData = await getData(params.id);
 
-   return {
+ // Return the fetched data as props for the page component.
+ return {
      props: {
-       postData,
-     },
-  };
+     postData,
+   },
+ };
 }
 
+// This function determines which paths to pre-render for all blog posts.
+// It runs at build time.
 export async function getStaticPaths() {
-  const paths = await getAllPostIds(); 
-   return {
-     paths,
-     fallback: false,
-   };
+ // Get the IDs of all available posts.
+  // Note: getAllPostIds is an async function in your posts.js
+ const paths = await getAllPostIds();
+ return {
+ // Return the list of paths to be pre-rendered.
+ paths,
+ // `fallback: false` means that any path not returned by `getStaticPaths`
+    // will result in a 404 page.
+ fallback: false,
+};
 }
 
+// This is the default component for the blog post page.
+// It receives `postData` as a prop from `getStaticProps`.
 export default function Post({ postData }) {
   return (
-     <Layout>
-      <Head>
-        <title>{postData.title}</title>
+ // Wrap the page content with the custom Layout component.
+   <Layout>
+    <Head>
+         <title>{postData.post_title}</title>
       </Head>
       <article>
-        <h1 className={utilStyles.headingXl}>{postData.title}</h1>
+       <h1 className={utilStyles.headingXl}>{postData.post_title}</h1>
+
         <div className={utilStyles.lightText}>
-          {/* FIX: Use the correct prop name for the date string */}
-        <Date dateString={postData.date} /> 
-         </div>
-           <div className={utilStyles.headingMd} dangerouslySetInnerHTML={{ __html: postData.contentHtml }} />
- </article>
+          <Date dateString={postData.post_date} />
+        </div>
+        <div className={utilStyles.headingMd} dangerouslySetInnerHTML={{ __html: postData.post_content }} />
+      </article>
     </Layout>
-  );
+   );
 }
