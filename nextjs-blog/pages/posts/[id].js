@@ -1,6 +1,6 @@
 import Layout from '../../components/layout';
 // FIX: Changed the import name from getPostData to getData to match the export in lib/posts.js
-import { getAllPostIds, getData } from '../../lib/posts'; 
+import { getAllIds, getData } from '../../lib/posts'; 
 import Head from 'next/head';
 import Date from '../../components/date'; 
 import utilStyles from '../../styles/utils.module.css'; 
@@ -24,7 +24,7 @@ export async function getStaticProps({ params }) {
 export async function getStaticPaths() {
  // Get the IDs of all available posts.
   // Note: getAllPostIds is an async function in your posts.js
- const paths = await getAllPostIds();
+ const paths = await getAllIds();
  return {
  // Return the list of paths to be pre-rendered.
  paths,
