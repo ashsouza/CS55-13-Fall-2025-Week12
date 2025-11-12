@@ -1,4 +1,3 @@
-// BEFORE USING got MUST DO: npm install got@9.6.0
 import got from 'got';
 
 // define URL for rest endpoint

@@ -1,17 +1,13 @@
 import Layout from '../../components/layout';
-// FIX: Changed the import name from getPostData to getData to match the export in lib/posts.js
 import { getAllIds, getData } from '../../lib/posts'; 
 import Head from 'next/head';
 import Date from '../../components/date'; 
 import utilStyles from '../../styles/utils.module.css'; 
 
-// This function fetches data for each individual post at build time.
-// It receives `params` containing the post's ID.
+
 export async function getStaticProps({ params }) {
- // FIX: Call the correctly imported function: getData
  const postData = await getData(params.id);
 
- // Return the fetched data as props for the page component.
  return {
      props: {
      postData,
@@ -20,10 +16,8 @@ export async function getStaticProps({ params }) {
 }
 
 // This function determines which paths to pre-render for all blog posts.
-// It runs at build time.
 export async function getStaticPaths() {
  // Get the IDs of all available posts.
-  // Note: getAllPostIds is an async function in your posts.js
  const paths = await getAllIds();
  return {
  // Return the list of paths to be pre-rendered.
